@@ -62,7 +62,7 @@ router.get("/obtenerusuario/:id", (req, res) => {
     
 //console.log(req.params.id);
 
-  ModeloUsuario.find({ idusuario: req.params.id })
+  ModeloUsuario.find({ id: req.params.id })
     .then(function (models) {
       res.send(models);
     })
@@ -74,7 +74,7 @@ router.get("/obtenerusuario/:id", (req, res) => {
 //actualizar usuario
 router.put("/actualizarusuario/:id", (req, res) => {
   ModeloUsuario.findOneAndUpdate(
-    { idusuario: req.params.id },
+    { id: req.params.id },
     {
       nombre: req.body.nombre,
       email: req.body.email,
@@ -92,7 +92,7 @@ router.put("/actualizarusuario/:id", (req, res) => {
 
 //Borrar usuario
 router.delete("/borrarusuario/:id", (req, res) => {
-  ModeloUsuario.findOneAndDelete({ idusuario: req.params.id })
+  ModeloUsuario.findOneAndDelete({ id: req.params.id })
     .then(function (models) {
       res.send("Usuario eliminado correctamente");
     })
@@ -100,3 +100,49 @@ router.delete("/borrarusuario/:id", (req, res) => {
       res.send(err);
     });
 });
+
+router.post('/login', async(req, res) => {
+var post = req.body;
+console.log(post)
+ModeloUsuario.find({ email: post.email })
+.then(async function (models) {
+  
+  if (models.length > 0) {
+      //res.send('Correo correcto')
+
+      const match =  await bcrypt.compare(post.password, models[0].password);
+      if(match){
+        const token= jwt.sign({id:models[0]._id,nombre:models[0].nombre},'secreto')
+
+        res.json ({
+            nombre:models[0].nombre,
+            id:models[0]._id,
+            token
+        })
+    }else{
+        res.json({
+            mensaje:'Contraseña equivocada'
+        })
+    }
+
+  }else{
+      res.send('Correo incorrecto')
+  } 
+})
+.catch(function (err){
+  res.send(err);
+});
+
+//
+// 
+
+
+
+  // if (post.email === 'gcruz@geotecnologias.com' && post.password === '123456') {
+  //     res.send('Correo / Password bien');
+  // } else {
+  //   res.send('Bad user/pass');
+  // }
+});
+
+
