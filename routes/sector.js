@@ -5,45 +5,39 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema;
 
-const schemaEmpresa = new schema({
+const schemaSector = new schema({
   nombre: String,
-  email: String,
-  telefono: String,
-  pais: String,
-  sector: String
+  descripcion: String
 });
 
-const ModeloEmpresa = mongoose.model("empresa", schemaEmpresa);
+const ModeloSector = mongoose.model("sector", schemaSector);
 module.exports = router;
 
 router.get("/ejemplo", (req, res) => {
   res.send("Saludo carga desde ruta ejemplo");
 });
 
-router.post("/agregarempresa", async (req, res) => {
-  const nuevaempresa = new ModeloEmpresa({
+router.post("/agregarsector", async (req, res) => {
+  const nuevaempresa = new ModeloSector({
     nombre: req.body.nombre,
-    email: req.body.email,
-    telefono: req.body.telefono,
-    pais:req.body.pais,
-    sector: req.body.sector
+    descripcion: req.body.descripcion
   });
 
    //console.log(nuevousuario);
   nuevaempresa
     .save()
     .then(function () {
-      res.send("Empresa agregada correctamente");
+      res.send("Sector agregado correctamente");
     })
     .catch(function (err) {
       console.log(err);
     });
 });
 
-//Get usuarios
+//Get sectores
 
-router.get("/obtenerempresas", (req, res) => {
-  ModeloEmpresa.find()
+router.get("/obtenersectores", (req, res) => {
+  ModeloSector.find()
     .then(function (models) {
       res.send(models);
     })
@@ -53,11 +47,11 @@ router.get("/obtenerempresas", (req, res) => {
 });
 
 //Obtener data de usuario
-router.get("/obtenerempresa/:id", (req, res) => {
+router.get("/obtenersector/:id", (req, res) => {
     
 //console.log(req.params.id);
 
-  ModeloEmpresa.find({ _id: req.params.id })
+  ModeloSector.find({ _id: req.params.id })
     .then(function (models) {
       res.send(models);
     })
@@ -67,19 +61,16 @@ router.get("/obtenerempresa/:id", (req, res) => {
 });
 
 //actualizar empresa
-router.put("/actualizarempresa/:id", (req, res) => {
-  ModeloEmpresa.findOneAndUpdate(
+router.put("/actualizarsector/:id", (req, res) => {
+  ModeloSector.findOneAndUpdate(
     { _id: req.params.id },
     {
       nombre: req.body.nombre,
-      email: req.body.email,
-      telefono: req.body.telefono,
-      pais:req.body.pais,
-      sector: req.body.sector
+      descripcion: req.body.descripcion
     }
   )
     .then(function (models) {
-      res.send("Empresa actualizada correctamente");
+      res.send("Sector actualizado correctamente");
     })
     .catch(function (err) {
       res.send(err);
@@ -87,10 +78,10 @@ router.put("/actualizarempresa/:id", (req, res) => {
 });
 
 //Borrar empresa
-router.delete("/borrarempresa/:id", (req, res) => {
-  ModeloEmpresa.findOneAndDelete({ _id: req.params.id })
+router.delete("/borrarsector/:id", (req, res) => {
+  ModeloSector.findOneAndDelete({ _id: req.params.id })
     .then(function (models) {
-      res.send("Empresa eliminada correctamente");
+      res.send("Sector eliminado correctamente");
     })
     .catch(function (err) {
       res.send(err);

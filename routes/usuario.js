@@ -62,7 +62,7 @@ router.get("/obtenerusuario/:id", (req, res) => {
     
 //console.log(req.params.id);
 
-  ModeloUsuario.find({ id: req.params.id })
+  ModeloUsuario.find({ _id: req.params.id })
     .then(function (models) {
       res.send(models);
     })
@@ -74,7 +74,7 @@ router.get("/obtenerusuario/:id", (req, res) => {
 //actualizar usuario
 router.put("/actualizarusuario/:id", (req, res) => {
   ModeloUsuario.findOneAndUpdate(
-    { id: req.params.id },
+    { _id: req.params.id },
     {
       nombre: req.body.nombre,
       email: req.body.email,
@@ -92,7 +92,7 @@ router.put("/actualizarusuario/:id", (req, res) => {
 
 //Borrar usuario
 router.delete("/borrarusuario/:id", (req, res) => {
-  ModeloUsuario.findOneAndDelete({ id: req.params.id })
+  ModeloUsuario.findOneAndDelete({ _id: req.params.id })
     .then(function (models) {
       res.send("Usuario eliminado correctamente");
     })

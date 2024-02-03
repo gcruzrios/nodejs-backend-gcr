@@ -56,7 +56,7 @@ router.get("/obtenercontacto/:id", (req, res) => {
     
 //console.log(req.params.id);
 
-  ModeloContacto.find({ id: req.params.id })
+  ModeloContacto.find({ _id: req.params.id })
     .then(function (models) {
       res.send(models);
     })
@@ -68,7 +68,7 @@ router.get("/obtenercontacto/:id", (req, res) => {
 //actualizar usuario
 router.put("/actualizarcontacto/:id", (req, res) => {
   ModeloContacto.findOneAndUpdate(
-    { id: req.params.id },
+    { _id: req.params.id },
     {
       nombre: req.body.nombre,
       email: req.body.email,
@@ -86,7 +86,7 @@ router.put("/actualizarcontacto/:id", (req, res) => {
 
 //Borrar usuario
 router.delete("/borrarcontacto/:id", (req, res) => {
-  ModeloContacto.findOneAndDelete({ id: req.params.id })
+  ModeloContacto.findOneAndDelete({ _id: req.params.id })
     .then(function (models) {
       res.send("Contacto eliminado correctamente");
     })

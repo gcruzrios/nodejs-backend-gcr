@@ -13,11 +13,12 @@ app.use(express.json());
 const rutausuario = require('./routes/usuario')
 const rutacontacto = require('./routes/contacto')
 const rutaempresa = require('./routes/empresa')
+const rutasector = require('./routes/sector')
 
 app.use('/api/usuario', rutausuario)
 app.use('/api/contacto', rutacontacto)
 app.use('/api/empresa', rutaempresa)
-
+app.use('/api/sector', rutasector)
 app.get('/', (req, res) => {
   res.send('Hola Mundo, aquí servidor NodeJS!')
 })
