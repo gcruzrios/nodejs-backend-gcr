@@ -115,6 +115,7 @@ ModeloUsuario.find({ email: post.email })
         const token= jwt.sign({id:models[0]._id,nombre:models[0].nombre},'secreto')
 
         res.json ({
+            mensaje:"Bienvenido",
             nombre:models[0].nombre,
             id:models[0]._id,
             token
@@ -126,7 +127,9 @@ ModeloUsuario.find({ email: post.email })
     }
 
   }else{
-      res.send('Correo incorrecto')
+    res.json({
+      mensaje:'Error de credenciales'
+  })
   } 
 })
 .catch(function (err){
