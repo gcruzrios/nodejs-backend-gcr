@@ -20,7 +20,7 @@ router.get("/ejemplo", (req, res) => {
 });
 
 router.post("/agregarcontacto", async (req, res) => {
-  const nuevocontacto = new ModeloUsuario({
+  const nuevocontacto = new ModeloContacto({
     nombre: req.body.nombre,
     email: req.body.email,
     telefono: req.body.telefono,
