@@ -4,6 +4,8 @@ const app = express()
 const archivoDb = require('./conexion');
 const port = 8000
 
+require('dotenv').config();
+
 const cors = require('cors');
 app.use(cors({origin: `*`}));
 app.options('http://localhost:3000', cors());
@@ -23,6 +25,6 @@ app.get('/', (req, res) => {
   res.send('Hola Mundo, aquí servidor NodeJS!')
 })
 
-app.listen(port, () => {
-  console.log(`Servidor escuchando en puerto ${port}`)
+app.listen(process.env.PORT, () => {
+  console.log(`Servidor escuchando en puerto ${process.env.PORT}`)
 })
