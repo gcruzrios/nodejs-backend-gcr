@@ -16,11 +16,14 @@ const rutausuario = require('./routes/usuario')
 const rutacontacto = require('./routes/contacto')
 const rutaempresa = require('./routes/empresa')
 const rutasector = require('./routes/sector')
+const rutasector = require('./routes/pais')
 
 app.use('/api/usuario', rutausuario)
 app.use('/api/contacto', rutacontacto)
 app.use('/api/empresa', rutaempresa)
 app.use('/api/sector', rutasector)
+app.use('/api/pais', rutapais)
+
 app.get('/', (req, res) => {
   res.send('Hola Mundo, aquí servidor NodeJS!')
 })
