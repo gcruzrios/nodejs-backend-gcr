@@ -16,7 +16,7 @@ const rutausuario = require('./routes/usuario')
 const rutacontacto = require('./routes/contacto')
 const rutaempresa = require('./routes/empresa')
 const rutasector = require('./routes/sector')
-const rutasector = require('./routes/pais')
+const rutapais = require('./routes/pais')
 
 app.use('/api/usuario', rutausuario)
 app.use('/api/contacto', rutacontacto)
