@@ -51,7 +51,7 @@ router.post("/agregarempleado", async (req, res) => {
 
 //Get usuarios
 
-router.get("/obtenerempleados", (req, res) => {
+router.get("/obtenerempleados/:id_empresa", (req, res) => {
   const id_empresa= req.params.id_empresa;
   ModeloEmpleado.find(id_empresa)
     .then(function (models) {
