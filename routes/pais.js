@@ -1,89 +1,18 @@
-const express = require("express");
-const router = express.Router();
+const router = require('express').Router();
+const { body } = require('express-validator');
+const { verificarToken } = require('../middlewares/auth');
+const { validar } = require('../middlewares/validar');
+const ctrl = require('../controllers/pais.controller');
 
-const mongoose = require("mongoose");
+const validarCrear = [
+  body('nombre').notEmpty().trim().withMessage('Nombre requerido'),
+  validar
+];
 
-const schema = mongoose.Schema;
+router.post('/',       validarCrear,   ctrl.crearPais);
+router.get('/',        verificarToken, ctrl.obtenerPaises);
+router.get('/:id',     verificarToken, ctrl.obtenerPais);
+router.put('/:id',     verificarToken, ctrl.actualizarPais);
+router.delete('/:id',  verificarToken, ctrl.eliminarPais);
 
-const schemaPais = new schema({
-  nombre: String,
-  continente: String
-});
-
-const ModeloPais = mongoose.model("pais", schemaPais);
 module.exports = router;
-
-router.get("/ejemplo", (req, res) => {
-  res.send("Saludo carga desde ruta ejemplo");
-});
-
-router.post("/agregarpais", async (req, res) => {
-  const nuevaregistro = new ModeloPais({
-    nombre: req.body.nombre,
-    continente: req.body.continente
-  });
-
-   //console.log(nuevousuario);
-  nuevaregistro
-    .save()
-    .then(function () {
-      res.send("Registro agregado correctamente");
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-});
-
-//Get sectores
-
-router.get("/obtenerpaises", (req, res) => {
-  ModeloPais.find()
-    .then(function (models) {
-      res.send(models);
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//Obtener data de usuario
-router.get("/obtenerpais/:id", (req, res) => {
-    
-//console.log(req.params.id);
-
-  ModeloPais.find({ _id: req.params.id })
-    .then(function (models) {
-      res.send(models);
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//actualizar empresa
-router.put("/actualizarpais/:id", (req, res) => {
-  ModeloPais.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      nombre: req.body.nombre,
-      continente: req.body.continente
-    }
-  )
-    .then(function (models) {
-      res.send("Registro actualizado correctamente");
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//Borrar empresa
-router.delete("/borrarpais/:id", (req, res) => {
-  ModeloPais.findOneAndDelete({ _id: req.params.id })
-    .then(function (models) {
-      res.send("Registro eliminado correctamente");
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});

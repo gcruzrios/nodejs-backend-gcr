@@ -1,89 +1,18 @@
-const express = require("express");
-const router = express.Router();
+const router = require('express').Router();
+const { body } = require('express-validator');
+const { verificarToken } = require('../middlewares/auth');
+const { validar } = require('../middlewares/validar');
+const ctrl = require('../controllers/sector.controller');
 
-const mongoose = require("mongoose");
+const validarCrear = [
+  body('nombre').notEmpty().trim().withMessage('Nombre requerido'),
+  validar
+];
 
-const schema = mongoose.Schema;
+router.post('/',       validarCrear,   ctrl.crearSector);
+router.get('/',        verificarToken, ctrl.obtenerSectores);
+router.get('/:id',     verificarToken, ctrl.obtenerSector);
+router.put('/:id',     verificarToken, ctrl.actualizarSector);
+router.delete('/:id',  verificarToken, ctrl.eliminarSector);
 
-const schemaSector = new schema({
-  nombre: String,
-  descripcion: String
-});
-
-const ModeloSector = mongoose.model("sector", schemaSector);
 module.exports = router;
-
-router.get("/ejemplo", (req, res) => {
-  res.send("Saludo carga desde ruta ejemplo");
-});
-
-router.post("/agregarsector", async (req, res) => {
-  const nuevaempresa = new ModeloSector({
-    nombre: req.body.nombre,
-    descripcion: req.body.descripcion
-  });
-
-   //console.log(nuevousuario);
-  nuevaempresa
-    .save()
-    .then(function () {
-      res.send("Sector agregado correctamente");
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-});
-
-//Get sectores
-
-router.get("/obtenersectores", (req, res) => {
-  ModeloSector.find()
-    .then(function (models) {
-      res.send(models);
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//Obtener data de usuario
-router.get("/obtenersector/:id", (req, res) => {
-    
-//console.log(req.params.id);
-
-  ModeloSector.find({ _id: req.params.id })
-    .then(function (models) {
-      res.send(models);
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//actualizar empresa
-router.put("/actualizarsector/:id", (req, res) => {
-  ModeloSector.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      nombre: req.body.nombre,
-      descripcion: req.body.descripcion
-    }
-  )
-    .then(function (models) {
-      res.send("Sector actualizado correctamente");
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//Borrar empresa
-router.delete("/borrarsector/:id", (req, res) => {
-  ModeloSector.findOneAndDelete({ _id: req.params.id })
-    .then(function (models) {
-      res.send("Sector eliminado correctamente");
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});

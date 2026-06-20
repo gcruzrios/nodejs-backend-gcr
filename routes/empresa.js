@@ -1,98 +1,18 @@
-const express = require("express");
-const router = express.Router();
+const router = require('express').Router();
+const { body } = require('express-validator');
+const { verificarToken } = require('../middlewares/auth');
+const { validar } = require('../middlewares/validar');
+const ctrl = require('../controllers/empresa.controller');
 
-const mongoose = require("mongoose");
+const validarCrear = [
+  body('nombre').notEmpty().trim().withMessage('Nombre requerido'),
+  validar
+];
 
-const schema = mongoose.Schema;
+router.post('/',       validarCrear,   ctrl.crearEmpresa);
+router.get('/',        verificarToken, ctrl.obtenerEmpresas);
+router.get('/:id',     verificarToken, ctrl.obtenerEmpresa);
+router.put('/:id',     verificarToken, ctrl.actualizarEmpresa);
+router.delete('/:id',  verificarToken, ctrl.eliminarEmpresa);
 
-const schemaEmpresa = new schema({
-  nombre: String,
-  email: String,
-  telefono: String,
-  pais: String,
-  sector: String
-});
-
-const ModeloEmpresa = mongoose.model("empresa", schemaEmpresa);
 module.exports = router;
-
-router.get("/ejemplo", (req, res) => {
-  res.send("Saludo carga desde ruta ejemplo");
-});
-
-router.post("/agregarempresa", async (req, res) => {
-  const nuevaempresa = new ModeloEmpresa({
-    nombre: req.body.nombre,
-    email: req.body.email,
-    telefono: req.body.telefono,
-    pais:req.body.pais,
-    sector: req.body.sector
-  });
-
-   //console.log(nuevousuario);
-  nuevaempresa
-    .save()
-    .then(function () {
-      res.send("Empresa agregada correctamente");
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-});
-
-//Get usuarios
-
-router.get("/obtenerempresas", (req, res) => {
-  ModeloEmpresa.find()
-    .then(function (models) {
-      res.send(models);
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//Obtener data de usuario
-router.get("/obtenerempresa/:id", (req, res) => {
-    
-//console.log(req.params.id);
-
-  ModeloEmpresa.find({ _id: req.params.id })
-    .then(function (models) {
-      res.send(models);
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//actualizar empresa
-router.put("/actualizarempresa/:id", (req, res) => {
-  ModeloEmpresa.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      nombre: req.body.nombre,
-      email: req.body.email,
-      telefono: req.body.telefono,
-      pais:req.body.pais,
-      sector: req.body.sector
-    }
-  )
-    .then(function (models) {
-      res.send("Empresa actualizada correctamente");
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});
-
-//Borrar empresa
-router.delete("/borrarempresa/:id", (req, res) => {
-  ModeloEmpresa.findOneAndDelete({ _id: req.params.id })
-    .then(function (models) {
-      res.send("Empresa eliminada correctamente");
-    })
-    .catch(function (err) {
-      res.send(err);
-    });
-});

@@ -1,35 +1,28 @@
-const express = require('express')
-const app = express()
-
-const archivoDb = require('./conexion');
-const port = 8000
-
 require('dotenv').config();
-
+const express = require('express');
 const cors = require('cors');
-app.use(cors({origin: `*`}));
-app.options('http://localhost:3000', cors());
+const { conectarDB } = require('./config/db');
+const { errorHandler } = require('./middlewares/error');
 
-//Importacion rutas y modelos
+const app = express();
+
+conectarDB();
+
+app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
 app.use(express.json());
-const rutausuario = require('./routes/usuario')
-const rutacontacto = require('./routes/contacto')
-const rutaempresa = require('./routes/empresa')
-const rutasector = require('./routes/sector')
-const rutapais = require('./routes/pais')
-const rutaempleado = require('./routes/empleado')
 
-app.use('/api/usuario', rutausuario)
-app.use('/api/contacto', rutacontacto)
-app.use('/api/empresa', rutaempresa)
-app.use('/api/sector', rutasector)
-app.use('/api/pais', rutapais)
-app.use('/api/empleado', rutaempleado)
+app.use('/api/auth',      require('./routes/auth'));
+app.use('/api/usuarios',  require('./routes/usuario'));
+app.use('/api/contactos', require('./routes/contacto'));
+app.use('/api/empresas',  require('./routes/empresa'));
+app.use('/api/sectores',  require('./routes/sector'));
+app.use('/api/paises',    require('./routes/pais'));
+app.use('/api/empleados', require('./routes/empleado'));
 
 app.get('/', (req, res) => {
-  res.send('Hola Mundo, aquí servidor NodeJS!')
-})
+  res.json({ ok: true, mensaje: 'API NodeJS funcionando correctamente' });
+});
 
-app.listen(process.env.PORT, () => {
-  console.log(`Servidor escuchando en puerto ${process.env.PORT}`)
-})
+app.use(errorHandler);
+
+module.exports = app;
